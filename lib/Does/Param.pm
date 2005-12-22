@@ -9,8 +9,6 @@ use Scalar::Util ();
 use Sub::Install ();
 use Tie::RefHash::Weak;
 
-our @EXPORT = our @EXPORT_OK = qw(param);
-
 =head1 NAME
 
 Does::Param - make your class provide a familiar "param" method
