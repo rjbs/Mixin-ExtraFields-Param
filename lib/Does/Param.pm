@@ -6,6 +6,7 @@ use strict;
 use Carp ();
 use Exporter qw(import);
 use Scalar::Util ();
+use Sub::Install ();
 use Tie::RefHash::Weak;
 
 our @EXPORT = our @EXPORT_OK = qw(param);
@@ -85,6 +86,18 @@ sub param {
     push @return, $value;
   }
   return wantarray ? @return : $return[0];
+}
+
+sub import {
+  my ($class, $import_as) = @_;
+  my $into = caller(0);
+  $import_as ||= 'param';
+
+  Sub::Install::install_sub({
+    code => \&param,
+    into => $into, 
+    as   => $import_as
+  });
 }
 
 =head1 AUTHOR
