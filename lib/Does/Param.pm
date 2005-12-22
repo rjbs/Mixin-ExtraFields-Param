@@ -3,6 +3,13 @@ package Does::Param;
 use warnings;
 use strict;
 
+use Carp ();
+use Exporter qw(import);
+use Scalar::Util ();
+use Tie::RefHash::Weak;
+
+our @EXPORT = our @EXPORT_OK = qw(param);
+
 =head1 NAME
 
 Does::Param - make your class provide a familiar "param" method
@@ -47,8 +54,37 @@ provided by L<CGI>, L<CGI::Application>, and other classes.
 
 =cut
 
-sub param {
+tie my %_params_for, 'Tie::RefHash::Weak';
 
+sub __params_storage_guts { %_params_for }
+
+sub param {
+  my $self = shift;
+  
+  Carp::croak "param is an instance method" unless Scalar::Util::blessed($self);
+
+  my $stash = $_params_for{ $self } ||= {};
+
+  return keys %$stash unless @_;
+
+  @_ = %{$_[0]} if @_ == 1 and ref $_[0] eq 'HASH';
+  
+  Carp::croak "invalid call to param: odd, non-one number of params"
+    if @_ > 1 and @_ % 2 == 1;
+
+  if (@_ == 1) {
+    my $key = $_[0];
+    return unless exists $stash->{$key};
+    return $stash->{$key};
+  }
+
+  my @return;
+  while (@_) {
+    my ($key, $value) = splice @_, 0, 2;
+    $stash->{$key} = $value;
+    push @return, $value;
+  }
+  return wantarray ? @return : $return[0];
 }
 
 =head1 AUTHOR
