@@ -9,6 +9,7 @@ WriteMakefile(
     ABSTRACT_FROM       => 'lib/Does/Param.pm',
     PL_FILES            => {},
     PREREQ_PM => {
+        'Sub::Install'      => 0.03,
         'Test::More'        => 0,
         'Tie::RefHash:Weak' => 0.01,
     },
