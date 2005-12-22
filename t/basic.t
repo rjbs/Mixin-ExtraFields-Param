@@ -6,7 +6,7 @@ use Test::More 'no_plan';
 
 {
   package Widget::Parameterized;
-  use Does::Param;
+  use Mixin::Param;
 
   sub new { bless {} => shift; }
 }

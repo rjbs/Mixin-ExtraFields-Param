@@ -1,4 +1,4 @@
-package Does::Param;
+package Mixin::Param;
 
 use warnings;
 use strict;
@@ -11,7 +11,7 @@ use Tie::RefHash::Weak;
 
 =head1 NAME
 
-Does::Param - make your class provide a familiar "param" method
+Mixin::Param - make your class provide a familiar "param" method
 
 =head1 VERSION
 
@@ -26,7 +26,7 @@ our $VERSION = '0.01';
 =head1 SYNOPSIS
 
   package Widget::Parametric;
-  use Does::Param;
+  use Mixin::Param;
 
   ...
 

@@ -1,7 +1,7 @@
 use Test::More tests => 1;
 
 BEGIN {
-  use_ok('Does::Param');
+  use_ok('Mixin::Param');
 }
 
-diag( "Testing Does::Param $Does::Param::VERSION" );
+diag( "Testing Mixin::Param $Mixin::Param::VERSION" );
