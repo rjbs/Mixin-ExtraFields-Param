@@ -4,7 +4,6 @@ use warnings;
 use strict;
 
 use Carp ();
-use Exporter qw(import);
 use Scalar::Util ();
 use Sub::Install ();
 use Tie::RefHash::Weak;
