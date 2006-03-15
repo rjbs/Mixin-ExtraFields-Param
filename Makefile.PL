@@ -10,7 +10,7 @@ WriteMakefile(
     PL_FILES            => {},
     PREREQ_PM => {
         'Scalar::Util'      => 0,
-        'Sub::Install'      => 0.03,
+        'Sub::Exporter'     => 0.90,
         'Test::More'        => 0,
         'Tie::RefHash:Weak' => 0.01,
     },
