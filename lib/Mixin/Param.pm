@@ -116,6 +116,23 @@ sub delete_param {
   return wantarray ? @deleted : $deleted[0];
 }
 
+=head2 C< has_param >
+
+  if ($object->has_param($name) { ... }
+
+=cut
+
+sub has_param {
+  my ($self, $key) = @_;
+  
+  Carp::croak "delete_param is an instance method"
+    unless Scalar::Util::blessed($self);
+
+  my $stash = $_params_for{ $self } ||= {};
+
+  return exists $stash->{$key};
+}
+
 =head1 AUTHOR
 
 Ricardo Signes, C<< <rjbs@cpan.org> >>
