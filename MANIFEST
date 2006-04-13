@@ -5,5 +5,8 @@ Makefile.PL
 README
 lib/Mixin/Param.pm
 t/00-load.t
+t/basic.t
+t/gc.t
+t/multi.t
 t/pod-coverage.t
 t/pod.t

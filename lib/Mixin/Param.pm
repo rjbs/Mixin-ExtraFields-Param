@@ -65,13 +65,16 @@ provided by L<CGI>, L<CGI::Application>, and other classes.
 #sub __params_storage_guts { %_params_for }
 
 sub _param_gen {
+  my (undef, undef, $arg) = @_;
+  my $P = $arg->{noun} || 'param';
+
   tie my %_params_for, 'Tie::RefHash::Weak';
 
   my %sub;
 
-  $sub{__params_storage_guts} = sub { %_params_for };
+  $sub{"__$P\_storage_guts"} = sub { %_params_for };
 
-  $sub{param} = sub {
+  $sub{$P} = sub {
     my $self = shift;
     
     Carp::croak "param is an instance method" unless Scalar::Util::blessed($self);
@@ -112,7 +115,7 @@ sub _param_gen {
 
 =cut
 
-  $sub{delete_param} = sub {
+  $sub{"delete_$P"} = sub {
     my $self = shift;
     my (@keys) = @_;
     
@@ -132,7 +135,7 @@ sub _param_gen {
 
 =cut
 
-  $sub{has_param} = sub {
+  $sub{"has_$P"} = sub {
     my ($self, $key) = @_;
     
     Carp::croak "delete_param is an instance method"
