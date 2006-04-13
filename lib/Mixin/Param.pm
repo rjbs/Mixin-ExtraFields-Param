@@ -8,7 +8,6 @@ use Scalar::Util ();
 use Tie::RefHash::Weak;
 
 use Sub::Exporter -setup => {
-  # exports  => [ param => \&_param_gen ],
   groups   => {
     default => [ '-param' ],
     param   => \&_param_gen,
@@ -43,26 +42,36 @@ our $VERSION = '0.01';
 =head1 DESCRIPTION
 
 This module mixes in to your class to provide a C<param> method like the ones
-provided by L<CGI>, L<CGI::Application>, and other classes.
+provided by L<CGI>, L<CGI::Application>, and other classes.  It doesn't store
+any information on your object, so it can work on any sort of object.  It
+doesn't need a DESTROY method, so you don't need to worry about cleaning up
+your Mixin::Param values when your object is destroyed.
+
+By default, the methods provided are:
+
+=over
+
+=item * param
+
+=item * has_param
+
+=item * delete_param
+
+=back
+
+These are documented below.  They are mixed in by default if you use
+Mixin::Param.  You can also import them explicitly by importing the "param"
+group.  These group can be passed a hashref of named arguments; see
+L<Sub::Exporter> for more information on how it works.  One important argument
+is "noun", which changes the names of the methods by replacing "param" with the
+value of the "noun" argument.
+
+If the "param" group is imported multiple times with different noun values, the
+methods will operate on distinct sets of data.
 
 =head1 METHODS
 
-=head2 C< param >
-
- my @params = $object->param;        # get names of existing params
-
- my $value = $object->param('name'); # get value of a param
-
- my $value = $object->param(name => $value); # set a param's value
-
- my @values = $object->param(n1 => $v1, n2 => $v2, ...); # set many values
-
 =cut
-
-#my %_params_for;
-#BEGIN { tie %_params_for, 'Tie::RefHash::Weak'; }
-
-#sub __params_storage_guts { %_params_for }
 
 sub _param_gen {
   my (undef, undef, $arg) = @_;
@@ -73,6 +82,20 @@ sub _param_gen {
   my %sub;
 
   $sub{"__$P\_storage_guts"} = sub { %_params_for };
+
+=head2 param
+
+ my @params = $object->param;        # get names of existing params
+
+ my $value = $object->param('name'); # get value of a param
+
+ my $value = $object->param(name => $value); # set a param's value
+
+ my @values = $object->param(n1 => $v1, n2 => $v2, ...); # set many values
+
+This method sets or retrieves parameters.
+
+=cut
 
   $sub{$P} = sub {
     my $self = shift;
@@ -105,13 +128,15 @@ sub _param_gen {
     return wantarray ? @assigned : $assigned[0];
   };
 
-=head2 C< delete_param >
+=head2 delete_param
 
  my $deleted = $object->delete_param('name'); # delete the param entirely
 
  my @deleted = $object->delete_param(@names); # delete several params
 
  my $deleted = $object->delete_param(@names); # returns the first deleted value
+
+This method deletes any entry for the named parameter(s).
 
 =cut
 
@@ -132,6 +157,9 @@ sub _param_gen {
 =head2 C< has_param >
 
   if ($object->has_param($name) { ... }
+
+This method is true if the named parameter exists in the object's set of
+parameters, even if it is undefined.
 
 =cut
 
