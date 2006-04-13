@@ -8,8 +8,11 @@ use Scalar::Util ();
 use Tie::RefHash::Weak;
 
 use Sub::Exporter -setup => {
-  exports  => [ qw(param) ],
-  groups   => { default => [ qw(param) ] },
+  # exports  => [ param => \&_param_gen ],
+  groups   => {
+    default => [ '-param' ],
+    param   => \&_param_gen,
+  },
 };
 
 =head1 NAME
@@ -56,41 +59,48 @@ provided by L<CGI>, L<CGI::Application>, and other classes.
 
 =cut
 
-my %_params_for;
-BEGIN { tie %_params_for, 'Tie::RefHash::Weak'; }
+#my %_params_for;
+#BEGIN { tie %_params_for, 'Tie::RefHash::Weak'; }
 
-sub __params_storage_guts { %_params_for }
+#sub __params_storage_guts { %_params_for }
 
-sub param {
-  my $self = shift;
-  
-  Carp::croak "param is an instance method" unless Scalar::Util::blessed($self);
+sub _param_gen {
+  tie my %_params_for, 'Tie::RefHash::Weak';
 
-  my $stash = $_params_for{ $self } ||= {};
+  my %sub;
 
-  return keys %$stash unless @_;
+  $sub{__params_storage_guts} = sub { %_params_for };
 
-  @_ = %{$_[0]} if @_ == 1 and ref $_[0] eq 'HASH';
-  
-  Carp::croak "invalid call to param: odd, non-one number of params"
-    if @_ > 1 and @_ % 2 == 1;
+  $sub{param} = sub {
+    my $self = shift;
+    
+    Carp::croak "param is an instance method" unless Scalar::Util::blessed($self);
 
-  if (@_ == 1) {
-    my $key = $_[0];
-    return unless exists $stash->{$key};
-    return $stash->{$key};
-  }
+    my $stash = $_params_for{ $self } ||= {};
 
-  my @assigned;
-  while (@_) {
-    # We don't put @_ into a hash because we guarantee processing (and more
-    # importantly return) order. -- rjbs, 2006-03-14
-    my ($key, $value) = splice @_, 0, 2;
-    $stash->{$key} = $value;
-    push @assigned, $value;
-  }
-  return wantarray ? @assigned : $assigned[0];
-}
+    return keys %$stash unless @_;
+
+    @_ = %{$_[0]} if @_ == 1 and ref $_[0] eq 'HASH';
+    
+    Carp::croak "invalid call to param: odd, non-one number of params"
+      if @_ > 1 and @_ % 2 == 1;
+
+    if (@_ == 1) {
+      my $key = $_[0];
+      return unless exists $stash->{$key};
+      return $stash->{$key};
+    }
+
+    my @assigned;
+    while (@_) {
+      # We don't put @_ into a hash because we guarantee processing (and more
+      # importantly return) order. -- rjbs, 2006-03-14
+      my ($key, $value) = splice @_, 0, 2;
+      $stash->{$key} = $value;
+      push @assigned, $value;
+    }
+    return wantarray ? @assigned : $assigned[0];
+  };
 
 =head2 C< delete_param >
 
@@ -102,19 +112,19 @@ sub param {
 
 =cut
 
-sub delete_param {
-  my $self = shift;
-  my (@keys) = @_;
-  
-  Carp::croak "delete_param is an instance method"
-    unless Scalar::Util::blessed($self);
+  $sub{delete_param} = sub {
+    my $self = shift;
+    my (@keys) = @_;
+    
+    Carp::croak "delete_param is an instance method"
+      unless Scalar::Util::blessed($self);
 
-  my $stash = $_params_for{ $self } ||= {};
+    my $stash = $_params_for{ $self } ||= {};
 
-  my @deleted = map { scalar delete $stash->{$_} } @keys;
+    my @deleted = map { scalar delete $stash->{$_} } @keys;
 
-  return wantarray ? @deleted : $deleted[0];
-}
+    return wantarray ? @deleted : $deleted[0];
+  };
 
 =head2 C< has_param >
 
@@ -122,15 +132,18 @@ sub delete_param {
 
 =cut
 
-sub has_param {
-  my ($self, $key) = @_;
-  
-  Carp::croak "delete_param is an instance method"
-    unless Scalar::Util::blessed($self);
+  $sub{has_param} = sub {
+    my ($self, $key) = @_;
+    
+    Carp::croak "delete_param is an instance method"
+      unless Scalar::Util::blessed($self);
 
-  my $stash = $_params_for{ $self } ||= {};
+    my $stash = $_params_for{ $self } ||= {};
 
-  return exists $stash->{$key};
+    return exists $stash->{$key};
+  };
+
+  return \%sub;
 }
 
 =head1 AUTHOR

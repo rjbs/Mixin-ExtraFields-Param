@@ -3,7 +3,7 @@ MANIFEST
 META.yml # Will be created by "make dist"
 Makefile.PL
 README
-lib/Does/Param.pm
+lib/Mixin/Param.pm
 t/00-load.t
 t/pod-coverage.t
 t/pod.t
