@@ -166,7 +166,7 @@ parameters, even if it is undefined.
   $sub{"has_$P"} = sub {
     my ($self, $key) = @_;
     
-    Carp::croak "delete_param is an instance method"
+    Carp::croak "has_param is an instance method"
       unless Scalar::Util::blessed($self);
 
     my $stash = $_params_for{ $self } ||= {};
