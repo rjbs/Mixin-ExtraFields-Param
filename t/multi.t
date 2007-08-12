@@ -6,12 +6,18 @@ use Test::More tests => 15;
 
 {
   package Widget::Parameterized;
-  use Mixin::Param
-    -param => undef,
-    -param => { noun => 'field' },
-  ;
+  use Mixin::ExtraFields::Param
+    -fields => { driver  => 'HashGuts' },
+    -fields => {
+      moniker => 'field',
+      driver  => {
+        class    => 'HashGuts',
+        hash_key => 'field',
+      }
+    };
 
   sub new { bless {} => shift; }
+  sub id { 0 + $_[0] }
 }
 
 my $widget = Widget::Parameterized->new;

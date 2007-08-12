@@ -1,7 +1,7 @@
 use Test::More tests => 1;
 
 BEGIN {
-  use_ok('Mixin::Param');
+  use_ok('Mixin::ExtraFields::Param');
 }
 
-diag( "Testing Mixin::Param $Mixin::Param::VERSION" );
+diag( "Testing Mixin::ExtraFields::Param $Mixin::ExtraFields::Param::VERSION" );

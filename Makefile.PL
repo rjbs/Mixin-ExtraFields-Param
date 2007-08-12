@@ -3,18 +3,17 @@ use warnings;
 use ExtUtils::MakeMaker;
 
 WriteMakefile(
-    NAME                => 'Mixin::Param',
-    AUTHOR              => 'Ricardo Signes <rjbs@cpan.org>',
-    VERSION_FROM        => 'lib/Mixin/Param.pm',
-    ABSTRACT_FROM       => 'lib/Mixin/Param.pm',
+    NAME                => 'Mixin::ExtraFields::Param',
+    AUTHOR              => 'Ricardo SIGNES <rjbs@cpan.org>',
+    VERSION_FROM        => 'lib/Mixin/ExtraFields/Param.pm',
+    ABSTRACT_FROM       => 'lib/Mixin/ExtraFields/Param.pm',
     LICENSE             => 'perl',
     PL_FILES            => {},
     PREREQ_PM => {
-        'Scalar::Util'      => 0,
-        'Sub::Exporter'     => 0.90,
-        'Test::More'        => 0,
-        'Tie::RefHash:Weak' => 0.01,
+        'Mixin::ExtraFields' => 0.002,
+        'Sub::Exporter'      => 0.90,
+        'Test::More'         => 0,
     },
     dist                => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
-    clean               => { FILES => 'Mixin-Param-* cover_db' },
+    clean               => { FILES => 'Mixin-ExtraFields-Param-* cover_db' },
 );

@@ -1,12 +1,10 @@
 Changes
 MANIFEST
-META.yml # Will be created by "make dist"
 Makefile.PL
 README
-lib/Mixin/Param.pm
+lib/Mixin/ExtraFields/Param.pm
 t/00-load.t
 t/basic.t
-t/gc.t
 t/multi.t
 t/pod-coverage.t
 t/pod.t

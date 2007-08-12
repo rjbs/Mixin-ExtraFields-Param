@@ -1,9 +1,0 @@
-blib*
-Makefile
-Makefile.old
-pm_to_blib*
-*.tar.gz
-.lwpcookies
-.releaserc
-Does-Param-*
-cover_db
