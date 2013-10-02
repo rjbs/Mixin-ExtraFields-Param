@@ -1,24 +1,11 @@
 use warnings;
 use strict;
-
 package Mixin::ExtraFields::Param;
-use base qw(Mixin::ExtraFields);
+use Mixin::ExtraFields 0.002 ();
+use parent qw(Mixin::ExtraFields);
+# ABSTRACT: make your class provide a familiar "param" method
 
 use Carp ();
-
-=head1 NAME
-
-Mixin::ExtraFields::Param - make your class provide a familiar "param" method
-
-=head1 VERSION
-
-version 0.011
-
- $Id: Param.pm 1185 2006-12-11 03:22:04Z rjbs $
-
-=cut
-
-our $VERSION = '0.011';
 
 =head1 SYNOPSIS
 
@@ -40,15 +27,10 @@ store your data.
 
 By default, the methods provided are:
 
-=over
-
-=item * param
-
-=item * exists_param
-
-=item * delete_param
-
-=back
+=for :list
+* param
+* exists_param
+* delete_param
 
 These methods are imported by the C<fields> group, which must be requested.  If
 a C<moniker> argument is supplied, the moniker is used instead of "param".  For
@@ -69,16 +51,12 @@ sub method_name {
 
 sub build_method {
   my ($self, $method_name, $arg) = @_;
-  
+
   return $self->_build_param_method($arg) if $method_name eq 'param';
   return $self->SUPER::build_method($method_name, $arg);
 }
 
-=head1 METHODS
-
-=cut
-
-=head2 param
+=method param
 
  my @params = $object->param;        # get names of existing params
 
@@ -113,7 +91,7 @@ sub _build_param_method {
     # future, we might want to complain if we get a hashref /and/ further
     # arguments.
     @_ = %{$_[0]} if @_ == 1 and ref $_[0] eq 'HASH';
-    
+
     Carp::croak "invalid call to param: odd, non-one number of params"
       if @_ > 1 and @_ % 2 == 1;
 
@@ -132,24 +110,5 @@ sub _build_param_method {
     return wantarray ? @assigned : $assigned[0];
   };
 }
-
-=head1 AUTHOR
-
-Ricardo SIGNES, C<< <rjbs@cpan.org> >>
-
-=head1 BUGS
-
-Please report any bugs or feature requests to L<http://rt.cpan.org>, for
-Mixin-ExtraFields-Param.  I will be notified, and then you'll automatically be
-notified of progress on your bug as I make changes.
-
-=head1 COPYRIGHT
-
-Copyright 2005-2006 Ricardo Signes, all rights reserved.
-
-This program is free software; you can redistribute it and/or modify it under
-the same terms as Perl itself.
-
-=cut
 
 1;
