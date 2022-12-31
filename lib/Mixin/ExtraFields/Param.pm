@@ -1,7 +1,8 @@
-use warnings;
-use strict;
 package Mixin::ExtraFields::Param;
 # ABSTRACT: make your class provide a familiar "param" method
+
+use warnings;
+use strict;
 
 use Mixin::ExtraFields 0.002 ();
 use parent qw(Mixin::ExtraFields);
