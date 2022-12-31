@@ -1,6 +1,8 @@
 Revision history for Mixin-ExtraFields-Param
 
 {{$NEXT}}
+
+0.022     2022-12-31 13:32:48-05:00 America/New_York
         - update packaging and metadata
         - minimum required Perl is now v5.12
 
